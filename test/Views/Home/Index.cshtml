@@ -1,0 +1,1594 @@
+﻿@using test.Entities
+@model Survey
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>PHIẾU KHẢO SÁT</title>
+    <style>
+        table {
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            background-color: white;
+        }
+
+        center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        .block {
+            display: inline-block;
+        }
+        fieldset {
+            display: inline-block;
+            border: none;
+            margin-left: 5px;
+        }
+        button {
+            background-color: #05c46b;
+            border: 1px solid #777;
+            border-radius: 2px;
+            font-family: inherit;
+            font-size: 21px;
+            display: block;
+            width: 100%;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+        input {
+            border: none;
+            border-bottom: 2px solid black;
+        }
+        textarea {
+            width:100%;
+        }
+            input.question + label, textarea.question + label {
+                position: relative;
+                white-space: nowrap; /* avoid label to go 2nd line*/
+                width: 25%; /* default width*/
+                border-top: 2px solid black; /* underline */
+                margin-left: 450px; /* left position */
+                height: 15px;
+            }
+    </style>
+</head>
+<body>
+    <form asp-action="SubmitForm" asp-controller="Home" method="post">
+        <H3 style="text-align:center">PHIẾU KHẢO SÁT Ý KIẾN BẠN ĐỌC THƯ VIỆN</H3>
+        <p>Các Anh/Chị bạn đọc thân mến!</p>
+        <p>Nhằm nâng cao chất lượng phục, đáp ứng ngày một tốt hơn nhu cầu sử dụng thư viện của bạn đọc. Thư Viện thực hiện việc lấy ý kiến bạn đọc qua phiếu khảo sát. Rất mong nhận được những ý kiến đóng góp của các anh/chị.</p>
+        <table class="table table-responsive">
+            <colgroup>
+                <col span="1" style="width: 5%;">
+                <col span="1" style="width: 70%;">
+                <col span="1" style="width: 25%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th> TT</th>
+                    <th>Nội dung câu hỏi và tình huống trả lời</th>
+                    <th>Lựa chọn câu trả lời</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="6" style="vertical-align:middle" align="center"><b>1</b></td>
+                    <td><b>Anh/Chị thường đến Thư viện vào buổi nào?</b></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='morning'>Buổi sáng</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio">
+                            <label><input type="radio" id='morning' value="morning" onclick="disableTxt('optradio','timeComeTxt',4)" name="optradio"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='afternoon'>Buổi chiều</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio">
+                            <label><input type="radio" id='afternoon' value="afternoon" onclick="disableTxt('optradio','timeComeTxt',4)" name="optradio"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='evening'>Buổi tối</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio">
+                            <label><input type="radio" id='evening' value="evening" onclick="disableTxt('optradio','timeComeTxt',4)" name="optradio"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='never'>Chưa bao giờ đến</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio">
+                            <label><input type="radio" id='never' value="never" onclick="disableTxt('optradio','timeComeTxt',4)" name="optradio"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='timeCome'>Thời gian khác (ghi rõ)</label>
+                            <input id="timeComeTxt" name="timeComeTxt" onblur="GetDataFromInput('timeComeTxt')" disabled />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio">
+                            <label><input type="radio" id='timeCome' value="timeCome" onclick="disableTxt('optradio','timeComeTxt',4)" name="optradio"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                @*Mức độ sử dụng Thư viện của bạn?*@
+                <tr>
+                    <td rowspan="5" style="vertical-align: middle;" align="center"><b>2</b></td>
+                    <td><b>Mức độ sử dụng Thư viện của bạn?</b></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='oftenUse'>Rất thường xuyên</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio2">
+                            <label><input type="radio" id='oftenUse' value="oftenUse" onclick="GetDataFromRadio('optradio2')" name="optradio2"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='usuallyUse'>Thường xuyên</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio2">
+                            <label><input type="radio" id='usuallyUse' value="usuallyUse" onclick="GetDataFromRadio('optradio2')" name="optradio2"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='sometimeUse'>Thỉnh thoảng</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio2">
+                            <label><input type="radio" id='sometimeUse' value="sometimeUse" onclick="GetDataFromRadio('optradio2')" name="optradio2"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext">
+                            <label for='rarelyUse'>Hiếm khi</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio2">
+                            <label><input type="radio" id='rarelyUse' value="rarelyUse" onclick="GetDataFromRadio('optradio2')" name="optradio2"></label>
+                        </div>
+                    </td>
+                </tr>
+                @*Bạn biết đến dịch vụ thông tin thư viện qua các kênh nào sau đây?*@
+                <tr>
+                    <td rowspan="6" style="vertical-align: middle;" align="center"><b>3</b></td>
+                    <td><b>Bạn biết đến dịch vụ thông tin thư viện qua các kênh nào sau đây?</b></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext3">
+                            <label for='tKnowLib'>Thầy cô/Bạn bè</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio3">
+                            <label><input type="radio" id='tKnowLib' value="tKnowLib" onclick="disableTxt('optradio3', 'knowLibTxt',4)" name="optradio3"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext3">
+                            <label for='cKnowLib'>Cán bộ thư viện</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio3">
+                            <label><input type="radio" id='cKnowLib' value="cKnowLib" onclick="disableTxt('optradio3', 'knowLibTxt',4)" name="optradio3"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext3">
+                            <label for='wKnowLib'>Website Thư viện</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio3">
+                            <label><input type="radio" id='wKnowLib' value="wKnowLib" onclick="disableTxt('optradio3', 'knowLibTxt',4)" name="optradio3"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext3">
+                            <label for='fKnowLib'>Fanpage Thư viện</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio3">
+                            <label><input type="radio" id='fKnowLib' value="fKnowLib" onclick="disableTxt('optradio3', 'knowLibTxt',4)" name="optradio3"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext3">
+                            <label for='kKnowLib'>Khác</label>
+                            <input id="knowLibTxt" name="knowLibTxt" onblur="GetDataFromInput('knowLibTxt')" disabled />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio3">
+                            <label><input type="radio" id='kKnowLib' value="kKnowLib" onclick="disableTxt('optradio3', 'knowLibTxt',4)" name="optradio3"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                @*Mục đích anh/chị đến thư viện?*@
+                <tr>
+                    <td rowspan="5" style="vertical-align: middle;" align="center"><b>4</b></td>
+                    <td><b>Mục đích anh/chị đến thư viện?</b></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext4">
+                            <label for='hPerposeLib'>Học tập</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio4">
+                            <label><input type="radio" id='hPerposeLib' value="hPerposeLib" onclick="disableTxt('optradio4', 'PurposeTxt',3)" name="optradio4"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext4">
+                            <label for='nPerposeLib'>Nghiên cứu</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio4">
+                            <label><input type="radio" id='nPerposeLib' value="nPerposeLib" onclick="disableTxt('optradio4', 'PurposeTxt',3)" name="optradio4"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext4">
+                            <label for='gPerposeLib'>Giải trí</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio4">
+                            <label><input type="radio" id='gPerposeLib' value="gPerposeLib" onclick="disableTxt('optradio4', 'PurposeTxt',3)" name="optradio4"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext4">
+                            <label for='kPerposeLib'>Khác (vui lòng ghi rõ): </label>
+                            <input id="PurposeTxt" name="PurposeTxt" onblur="GetDataFromInput('PurposeTxt')" disabled />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio4">
+                            <label><input type="radio" id='kPerposeLib' value="kPerposeLib" onclick="disableTxt('optradio4', 'PurposeTxt',3)" name="optradio4"></label>
+                        </div>
+                    </td>
+                </tr>
+
+
+                @*Lý do Anh/Chị đến Thư viện?*@
+                <tr>
+                    <td rowspan="7" style="vertical-align: middle;" align="center"><b>5</b></td>
+                    <td><b>Lý do Anh/Chị đến Thư viện?</b></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext5">
+                            <label for='Reason1'>Tài liệu phong phú, phù hợp với chương trình học</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio5">
+                            <label><input type="radio" id='Reason1' value="Reason1" onclick="disableTxt('optradio5', 'ReasonTxt',5)" name="optradio5"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext5">
+                            <label for='Reason2'>Tài liệu tôi cần không có ở nơi khác</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio5">
+                            <label><input type="radio" id='Reason2' value="Reason2" onclick="disableTxt('optradio5', 'ReasonTxt',5)" name="optradio5"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext5">
+                            <label for='Reason3'>Không gian học thuận lợi</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio5">
+                            <label><input type="radio" id='Reason3' value="Reason3" onclick="disableTxt('optradio5', 'ReasonTxt',5)" name="optradio5"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext5">
+                            <label for='Reason4'>Tiết kiệm được tiền mua sách</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio5">
+                            <label><input type="radio" id='Reason4' value="Reason4" onclick="disableTxt('optradio5', 'ReasonTxt',5)" name="optradio5"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext5">
+                            <label for='Reason5'>Cần wifi để truy cập internet</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio5">
+                            <label><input type="radio" id='Reason5' value="Reason5" onclick="disableTxt('optradio5', 'ReasonTxt',5)" name="optradio5"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext5">
+                            <label for='Reason6'>Lý do khác (ghi rõ):</label>
+                            <input id="ReasonTxt" name="ReasonTxt" onblur="GetDataFromInput('ReasonTxt')" disabled />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio5">
+                            <label><input type="radio" id='Reason6' value="Reason6" onclick="disableTxt('optradio5', 'ReasonTxt',5)" name="optradio5"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                @*Thời gian phục vụ hiện tại của Thư viện có phù hợp với nhu cầu của Anh/Chị?*@
+                <tr>
+                    <td rowspan="4" style="vertical-align: middle;" align="center"><b>6</b></td>
+                    <td><b>Thời gian phục vụ hiện tại của Thư viện có phù hợp với nhu cầu của Anh/Chị?</b></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext6">
+                            <label for='TimeLibOpen1'>Phù hợp</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio6">
+                            <label><input type="radio" id='TimeLibOpen1' value="TimeLibOpen1" onclick="disableTxt('optradio6', 'TimeLibOpenTxt',2)" name="optradio6"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext6">
+                            <label for='TimeLibOpen2'>Chưa phù hợp</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio6">
+                            <label><input type="radio" id='TimeLibOpen2' value="TimeLibOpen2" onclick="disableTxt('optradio6', 'TimeLibOpenTxt',2)" name="optradio6"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext6">
+                            <label for='TimeLibOpen2'>Ý kiến khác: </label>
+                            <input id="TimeLibOpenTxt" name="TimeLibOpenTxt" onblur="GetDataFromInput('TimeLibOpenTxt')" disabled />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio6">
+                            <label><input type="radio" id='TimeLibOpen2' value="TimeLibOpen2" onclick="disableTxt('optradio6', 'TimeLibOpenTxt',2)" name="optradio6"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                @*Sản phẩm thông tin của Thư viện:*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center"><b>7</b></td>
+                    <td colspan="2"><b>Sản phẩm thông tin của Thư viện:</b></td>
+                </tr>
+
+                @*Anh/Chị tra cứu tài liệu bằng hình thức nào?*@
+                <tr>
+                    <td rowspan="5" style="vertical-align: middle;" align="center"><b>7.1</b></td>
+                    <td><b>Anh/Chị tra cứu tài liệu bằng hình thức nào?</b></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext71">
+                            <label for='Search1'>Chọn trực tiếp trên kệ</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio71">
+                            <label><input type="radio" id='Search1' value="Search1" onclick="disableTxt('optradio71', 'SearchTxt',3)" name="optradio71"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext71">
+                            <label for='Search2'>Tra cứu website thư viện</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio71">
+                            <label><input type="radio" id='Search2' value="Search2" onclick="disableTxt('optradio71', 'SearchTxt',3)" name="optradio71"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext71">
+                            <label for='Search3'>Hỏi trực tiếp CBTV</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio71">
+                            <label><input type="radio" id='Search3' value="Search3" onclick="disableTxt('optradio71', 'SearchTxt',3)" name="optradio71"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext71">
+                            <label for='Search3'>Khác: </label>
+                            <input id="SearchTxt" name="SearchTxt" onblur="GetDataFromInput('SearchTxt')" disabled />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="radio71">
+                            <label><input type="radio" id='Search3' value="Search3" onclick="disableTxt('optradio71', 'SearchTxt',3)" name="optradio71"></label>
+                        </div>
+                    </td>
+                </tr>
+
+
+                @*Chất lượng hệ thống tra cứu: (Theo thang điểm 5, 1 là thấp nhất – 5 là tốt nhất)*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center"><b>7.2</b></td>
+                    <td colspan="2"><b> Chất lượng hệ thống tra cứu: (Theo thang điểm 5, 1 là thấp nhất – 5 là tốt nhất):</b></td>
+                </tr>
+
+                @*Cơ sở dữ liệu (các sản phẩm thông tin)*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="3"><b>7.2.1</b></td>
+                    <td colspan="2"><b>Cơ sở dữ liệu (các sản phẩm thông tin)</b></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="radiotext721">
+                            <label>Thông tin đầy đủ, cập nhật</label>
+                        </div>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label for='InformationDatabase1'>1 <input type="radio" id='InformationDatabase1' value="InformationDatabase1" name="optradio721" onclick="GetSurveyFromRadio('optradio721')"></label>
+                            <label for='InformationDatabase2' style="margin-left:10px">2 <input type="radio" id='InformationDatabase12' value="InformationDatabase12" name="optradio721" onclick="GetSurveyFromRadio('optradio721')"></label>
+                            <label for='InformationDatabase3' style="margin-left:10px">3 <input type="radio" id='InformationDatabase13' value="InformationDatabase13" name="optradio721" onclick="GetSurveyFromRadio('optradio721')"></label>
+                            <label for='InformationDatabase4' style="margin-left:10px">4 <input type="radio" id='InformationDatabase14' value="InformationDatabase14" name="optradio721" onclick="GetSurveyFromRadio('optradio721')"></label>
+                            <label for='InformationDatabase5' style="margin-left:10px">5 <input type="radio" id='InformationDatabase15' value="InformationDatabase15" name="optradio721" onclick="GetSurveyFromRadio('optradio721')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div>
+                            <label>Tra cứu nhanh, tiện lợi, dễ sử dụng</label>
+                        </div>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='searchCSDL1' value="searchCSDL1" name="optradio7212" onclick="GetSurveyFromRadio('optradio7212')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='searchCSDL2' value="searchCSDL2" name="optradio7212" onclick="GetSurveyFromRadio('optradio7212')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='searchCSDL3' value="searchCSDL3" name="optradio7212" onclick="GetSurveyFromRadio('optradio7212')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='searchCSDL4' value="searchCSDL4" name="optradio7212" onclick="GetSurveyFromRadio('optradio7212')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='searchCSDL5' value="searchCSDL5" name="optradio7212" onclick="GetSurveyFromRadio('optradio7212')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+
+                @*Danh mục tra cứu thư viện:*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="3"><b>7.2.2</b></td>
+                    <td colspan="2"><b>Danh mục tra cứu thư viện:</b></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Thông tin đầy đủ, cập nhật</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='informationCategory1' value="informationCategory1" name="optradio722" onclick="GetSurveyFromRadio('optradio722')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='informationCategory2' value="informationCategory2" name="optradio722" onclick="GetSurveyFromRadio('optradio722')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='informationCategory3' value="informationCategory3" name="optradio722" onclick="GetSurveyFromRadio('optradio722')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='informationCategory4' value="informationCategory4" name="optradio722" onclick="GetSurveyFromRadio('optradio722')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='informationCategory5' value="informationCategory5" name="optradio722" onclick="GetSurveyFromRadio('optradio722')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Thông tin chính xác</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='informationExactly1' value="informationExactly1" name="optradio7222" onclick="GetSurveyFromRadio('optradio7222')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='informationExactly2' value="informationExactly2" name="optradio7222" onclick="GetSurveyFromRadio('optradio7222')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='informationExactly3' value="informationExactly3" name="optradio7222" onclick="GetSurveyFromRadio('optradio7222')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='informationExactly4' value="informationExactly4" name="optradio7222" onclick="GetSurveyFromRadio('optradio7222')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='informationExactly5' value="informationExactly5" name="optradio7222" onclick="GetSurveyFromRadio('optradio7222')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+
+                @*Website Thư viện*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="4"><b>7.2.3</b></td>
+                    <td colspan="2"><b>Website Thư viện</b></td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <label>Thông tin đầy đủ, cập nhật</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='informationWebsite1' value="informationWebsite1" name="optradio723" onclick="GetSurveyFromRadio('optradio723')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='informationWebsite2' value="informationWebsite2" name="optradio723" onclick="GetSurveyFromRadio('optradio723')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='informationWebsite3' value="informationWebsite3" name="optradio723" onclick="GetSurveyFromRadio('optradio723')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='informationWebsite4' value="informationWebsite4" name="optradio723" onclick="GetSurveyFromRadio('optradio723')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='informationWebsite5' value="informationWebsite5" name="optradio723" onclick="GetSurveyFromRadio('optradio723')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Thông tin chính xác</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='exactlyWebsite1' value="exactlyWebsite1" name="optradio7232" onclick="GetSurveyFromRadio('optradio7232')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='exactlyWebsite2' value="exactlyWebsite2" name="optradio7232" onclick="GetSurveyFromRadio('optradio7232')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='exactlyWebsite3' value="exactlyWebsite3" name="optradio7232" onclick="GetSurveyFromRadio('optradio7232')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='exactlyWebsite4' value="exactlyWebsite4" name="optradio7232" onclick="GetSurveyFromRadio('optradio7232')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='exactlyWebsite5' value="exactlyWebsite5" name="optradio7232" onclick="GetSurveyFromRadio('optradio7232')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tra cứu nhanh, tiện lợi, dễ sử dụng</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='searchWebsite1' value="searchWebsite1" name="optradio7233" onclick="GetSurveyFromRadio('optradio7233')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='searchWebsite2' value="searchWebsite2" name="optradio7233" onclick="GetSurveyFromRadio('optradio7233')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='searchWebsite3' value="searchWebsite3" name="optradio7233" onclick="GetSurveyFromRadio('optradio7233')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='searchWebsite4' value="searchWebsite4" name="optradio7233" onclick="GetSurveyFromRadio('optradio7233')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='searchWebsite5' value="searchWebsite5" name="optradio7233" onclick="GetSurveyFromRadio('optradio7233')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                @*Mức độ hiệu quả của các loại hình dịch vụ mà anh chị đã sử dụng tại Thư viện?*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="7"><b>8</b></td>
+                    <td colspan="2"><b>Mức độ hiệu quả của các loại hình dịch vụ mà anh chị đã sử dụng tại Thư viện?</b></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Đọc tại chỗ</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='readEffective1' value="readEffective1" name="optradio8" onclick="GetSurveyFromRadio('optradio8')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='readEffective2' value="readEffective2" name="optradio8" onclick="GetSurveyFromRadio('optradio8')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='readEffective3' value="readEffective3" name="optradio8" onclick="GetSurveyFromRadio('optradio8')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='readEffective4' value="readEffective4" name="optradio8" onclick="GetSurveyFromRadio('optradio8')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='readEffective5' value="readEffective5" name="optradio8" onclick="GetSurveyFromRadio('optradio8')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Mượn về nhà</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='borrowEffective1' value="borrowEffective1" name="optradio82" onclick="GetSurveyFromRadio('optradio82')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='borrowEffective2' value="borrowEffective2" name="optradio82" onclick="GetSurveyFromRadio('optradio82')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='borrowEffective3' value="borrowEffective3" name="optradio82" onclick="GetSurveyFromRadio('optradio82')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='borrowEffective4' value="borrowEffective4" name="optradio82" onclick="GetSurveyFromRadio('optradio82')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='borrowEffective5' value="borrowEffective5" name="optradio82" onclick="GetSurveyFromRadio('optradio82')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tham khảo tài liệu</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='referEffective1' value="referEffective1" name="optradio83" onclick="GetSurveyFromRadio('optradio83')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='referEffective2' value="referEffective2" name="optradio83" onclick="GetSurveyFromRadio('optradio83')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='referEffective3' value="referEffective3" name="optradio83" onclick="GetSurveyFromRadio('optradio83')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='referEffective4' value="referEffective4" name="optradio83" onclick="GetSurveyFromRadio('optradio83')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='referEffective5' value="referEffective5" name="optradio83" onclick="GetSurveyFromRadio('optradio83')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Internet</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='internetEffective1' value="internetEffective1" name="optradio84" onclick="GetSurveyFromRadio('optradio84')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='internetEffective2' value="internetEffective2" name="optradio84" onclick="GetSurveyFromRadio('optradio84')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='internetEffective3' value="internetEffective3" name="optradio84" onclick="GetSurveyFromRadio('optradio84')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='internetEffective4' value="internetEffective4" name="optradio84" onclick="GetSurveyFromRadio('optradio84')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='internetEffective5' value="internetEffective5" name="optradio84" onclick="GetSurveyFromRadio('optradio84')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Photo, in ấn</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='photoEffective1' value="photoEffective1" name="optradio85" onclick="GetSurveyFromRadio('optradio85')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='photoEffective2' value="photoEffective2" name="optradio85" onclick="GetSurveyFromRadio('optradio85')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='photoEffective3' value="photoEffective3" name="optradio85" onclick="GetSurveyFromRadio('optradio85')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='photoEffective4' value="photoEffective4" name="optradio85" onclick="GetSurveyFromRadio('optradio85')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='photoEffective5' value="photoEffective5" name="optradio85" onclick="GetSurveyFromRadio('optradio85')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <label>Khác:</label>
+                        <input style="width:90%" name="differentEffective" maxlength="250" asp-for="DifferentEffective" />
+                    </td>
+                </tr>
+
+                @*Đánh giá cơ sở vật chất, trang thiết bị, tài liệu, thái độ phục vụ của thư viện*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center"><b>9</b></td>
+                    <td colspan="2"><b>Đánh giá cơ sở vật chất, trang thiết bị, tài liệu, thái độ phục vụ của thư viện</b></td>
+                </tr>
+
+                @*Đánh giá cơ sở vật chất, trang thiết bị: *@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="9"><b>9.1</b></td>
+                    <td colspan="2"><b>Đánh giá cơ sở vật chất, trang thiết bị: </b></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Không gian thư viện</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='spaceAccess1' value="spaceAccess1" name="optradio91" onclick="GetSurveyFromRadio('optradio91')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='spaceAccess2' value="spaceAccess2" name="optradio91" onclick="GetSurveyFromRadio('optradio91')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='spaceAccess3' value="spaceAccess3" name="optradio91" onclick="GetSurveyFromRadio('optradio91')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='spaceAccess4' value="spaceAccess4" name="optradio91" onclick="GetSurveyFromRadio('optradio91')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='spaceAccess5' value="spaceAccess5" name="optradio91" onclick="GetSurveyFromRadio('optradio91')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Bàn ghế, chỗ ngồi</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='seatAccess1' value="seatAccess1" name="optradio912" onclick="GetSurveyFromRadio('optradio912')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='seatAccess2' value="seatAccess2" name="optradio912" onclick="GetSurveyFromRadio('optradio912')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='seatAccess3' value="seatAccess3" name="optradio912" onclick="GetSurveyFromRadio('optradio912')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='seatAccess4' value="seatAccess4" name="optradio912" onclick="GetSurveyFromRadio('optradio912')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='seatAccess5' value="seatAccess5" name="optradio912" onclick="GetSurveyFromRadio('optradio912')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Phòng họp/học nhóm</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='roomAccess1' value="roomAccess1" name="optradio913" onclick="GetSurveyFromRadio('optradio913')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='roomAccess2' value="roomAccess2" name="optradio913" onclick="GetSurveyFromRadio('optradio913')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='roomAccess3' value="roomAccess3" name="optradio913" onclick="GetSurveyFromRadio('optradio913')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='roomAccess4' value="roomAccess4" name="optradio913" onclick="GetSurveyFromRadio('optradio913')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='roomAccess5' value="roomAccess5" name="optradio913" onclick="GetSurveyFromRadio('optradio913')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Hệ thống đèn, quạt</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='deviceAccess1' value="deviceAccess1" name="optradio914" onclick="GetSurveyFromRadio('optradio914')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='deviceAccess2' value="deviceAccess2" name="optradio914" onclick="GetSurveyFromRadio('optradio914')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='deviceAccess3' value="deviceAccess3" name="optradio914" onclick="GetSurveyFromRadio('optradio914')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='deviceAccess4' value="deviceAccess4" name="optradio914" onclick="GetSurveyFromRadio('optradio914')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='deviceAccess5' value="deviceAccess5" name="optradio914" onclick="GetSurveyFromRadio('optradio914')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Hệ thống máy tính, internet</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='internetAccess1' value="internetAccess1" name="optradio915" onclick="GetSurveyFromRadio('optradio915')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='internetAccess2' value="internetAccess2" name="optradio915" onclick="GetSurveyFromRadio('optradio915')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='internetAccess3' value="internetAccess3" name="optradio915" onclick="GetSurveyFromRadio('optradio915')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='internetAccess4' value="internetAccess4" name="optradio915" onclick="GetSurveyFromRadio('optradio915')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='internetAccess5' value="internetAccess5" name="optradio915" onclick="GetSurveyFromRadio('optradio915')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Wifi </label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='wifiAccess1' value="wifiAccess1" name="optradio916" onclick="GetSurveyFromRadio('optradio916')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='wifiAccess2' value="wifiAccess2" name="optradio916" onclick="GetSurveyFromRadio('optradio916')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='wifiAccess3' value="wifiAccess3" name="optradio916" onclick="GetSurveyFromRadio('optradio916')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='wifiAccess4' value="wifiAccess4" name="optradio916" onclick="GetSurveyFromRadio('optradio916')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='wifiAccess5' value="wifiAccess5" name="optradio916" onclick="GetSurveyFromRadio('optradio916')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Kệ - giá sách </label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='shelfAccess1' value="shelfAccess1" name="optradio917" onclick="GetSurveyFromRadio('optradio917')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='shelfAccess2' value="shelfAccess2" name="optradio917" onclick="GetSurveyFromRadio('optradio917')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='shelfAccess3' value="shelfAccess3" name="optradio917" onclick="GetSurveyFromRadio('optradio917')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='shelfAccess4' value="shelfAccess4" name="optradio917" onclick="GetSurveyFromRadio('optradio917')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='shelfAccess5' value="shelfAccess5" name="optradio917" onclick="GetSurveyFromRadio('optradio917')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <label>Góp ý: (nếu có)</label>
+                        <input style="width:90%" maxlength="250" asp-for="AdditionReview"/>
+                    </td>
+                </tr>
+
+                @*Đánh giá mức độ đầy đủ, phong phú của tài liệu*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="14"><b>9.2</b></td>
+                    <td colspan="2"><b>Đánh giá mức độ đầy đủ, phong phú của tài liệu</b></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <label>Tài liệu truyền thống </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Sách tiếng Việt</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='bookVNDocument1' value="bookVNDocument1" name="optradio92" onclick="GetSurveyFromRadio('optradio92')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='bookVNDocument2' value="bookVNDocument2" name="optradio92" onclick="GetSurveyFromRadio('optradio92')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='bookVNDocument3' value="bookVNDocument3" name="optradio92" onclick="GetSurveyFromRadio('optradio92')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='bookVNDocument4' value="bookVNDocument4" name="optradio92" onclick="GetSurveyFromRadio('optradio92')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='bookVNDocument5' value="bookVNDocument5" name="optradio92" onclick="GetSurveyFromRadio('optradio92')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Sách tiếng Anh</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='bookENDocument1' value="bookENDocument1" name="optradio922" onclick="GetSurveyFromRadio('optradio922')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='bookENDocument2' value="bookENDocument2" name="optradio922" onclick="GetSurveyFromRadio('optradio922')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='bookENDocument3' value="bookENDocument3" name="optradio922" onclick="GetSurveyFromRadio('optradio922')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='bookENDocument4' value="bookENDocument4" name="optradio922" onclick="GetSurveyFromRadio('optradio922')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='bookENDocument5' value="bookENDocument5" name="optradio922" onclick="GetSurveyFromRadio('optradio922')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Sách tiếng Nhật</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='bookJPDocument1' value="bookJPDocument1" name="optradio923" onclick="GetSurveyFromRadio('optradio923')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='bookJPDocument2' value="bookJPDocument2" name="optradio923" onclick="GetSurveyFromRadio('optradio923')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='bookJPDocument3' value="bookJPDocument3" name="optradio923" onclick="GetSurveyFromRadio('optradio923')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='bookJPDocument4' value="bookJPDocument4" name="optradio923" onclick="GetSurveyFromRadio('optradio923')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='bookJPDocument5' value="bookJPDocument5" name="optradio923" onclick="GetSurveyFromRadio('optradio923')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Sách tiếng Trung</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='bookCNDocument1' value="bookCNDocument1" name="optradio924" onclick="GetSurveyFromRadio('optradio924')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='bookCNDocument2' value="bookCNDocument2" name="optradio924" onclick="GetSurveyFromRadio('optradio924')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='bookCNDocument3' value="bookCNDocument3" name="optradio924" onclick="GetSurveyFromRadio('optradio924')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='bookCNDocument4' value="bookCNDocument4" name="optradio924" onclick="GetSurveyFromRadio('optradio924')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='bookCNDocument5' value="bookCNDocument5" name="optradio924" onclick="GetSurveyFromRadio('optradio924')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Sách tiếng Hàn</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='bookKPDocument1' value="bookKPDocument1" name="optradio925" onclick="GetSurveyFromRadio('optradio925')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='bookKPDocument2' value="bookKPDocument2" name="optradio925" onclick="GetSurveyFromRadio('optradio925')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='bookKPDocument3' value="bookKPDocument3" name="optradio925" onclick="GetSurveyFromRadio('optradio925')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='bookKPDocument4' value="bookKPDocument4" name="optradio925" onclick="GetSurveyFromRadio('optradio925')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='bookKPDocument5' value="bookKPDocument5" name="optradio925" onclick="GetSurveyFromRadio('optradio925')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Sách tiếng Đức</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='bookKDEocument1' value="bookDEDocument1" name="optradio926" onclick="GetSurveyFromRadio('optradio926')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='bookDEDocument2' value="bookDEDocument2" name="optradio926" onclick="GetSurveyFromRadio('optradio926')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='bookDEDocument3' value="bookDEDocument3" name="optradio926" onclick="GetSurveyFromRadio('optradio926')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='bookDEDocument4' value="bookDEDocument4" name="optradio926" onclick="GetSurveyFromRadio('optradio926')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='bookDEDocument5' value="bookDEDocument5" name="optradio926" onclick="GetSurveyFromRadio('optradio926')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Luận án/Khóa luận/Đồ án</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='projectDocument1' value="projectDocument1" name="optradio927" onclick="GetSurveyFromRadio('optradio927')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='projectDocument2' value="projectDocument2" name="optradio927" onclick="GetSurveyFromRadio('optradio927')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='projectDocument3' value="projectDocument3" name="optradio927" onclick="GetSurveyFromRadio('optradio927')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='projectDocument4' value="projectDocument4" name="optradio927" onclick="GetSurveyFromRadio('optradio927')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='projectDocument5' value="projectDocument5" name="optradio927" onclick="GetSurveyFromRadio('optradio927')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tạp chí/báo/tập san</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='newspaperDocument1' value="newspaperDocument1" name="optradio928" onclick="GetSurveyFromRadio('optradio928')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='newspaperDocument2' value="newspaperDocument2" name="optradio928" onclick="GetSurveyFromRadio('optradio928')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='newspaperDocument3' value="newspaperDocument3" name="optradio928" onclick="GetSurveyFromRadio('optradio928')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='newspaperDocument4' value="newspaperDocument4" name="optradio928" onclick="GetSurveyFromRadio('optradio928')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='newspaperDocument5' value="newspaperDocument5" name="optradio928" onclick="GetSurveyFromRadio('optradio928')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tài liệu điện tử, trực tuyến (ebook, CD-VCD-DVD…)</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='ebookDocument1' value="ebookDocument1" name="optradio929" onclick="GetSurveyFromRadio('optradio929')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='ebookDocument2' value="ebookDocument2" name="optradio929" onclick="GetSurveyFromRadio('optradio929')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='ebookDocument3' value="ebookDocument3" name="optradio929" onclick="GetSurveyFromRadio('optradio929')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='ebookDocument4' value="ebookDocument4" name="optradio929" onclick="GetSurveyFromRadio('optradio929')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='ebookDocument5' value="ebookDocument5" name="optradio929" onclick="GetSurveyFromRadio('optradio929')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tính cập nhật, bổ sung TL mới</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='updateDocument1' value="updateDocument1" name="optradio9291" onclick="GetSurveyFromRadio('optradio9291')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='updateDocument2' value="updateDocument2" name="optradio9291" onclick="GetSurveyFromRadio('optradio9291')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='updateDocument3' value="updateDocument3" name="optradio9291" onclick="GetSurveyFromRadio('optradio9291')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='updateDocument4' value="updateDocument4" name="optradio9291" onclick="GetSurveyFromRadio('optradio9291')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='updateDocument5' value="updateDocument5" name="optradio9291" onclick="GetSurveyFromRadio('optradio9291')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tính hiệu quả của TL cho việc nghiên cứu, học tập</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='effectiveDocument1' value="effectiveDocument1" name="optradio9292" onclick="GetSurveyFromRadio('optradio9292')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='effectiveDocument2' value="effectiveDocument2" name="optradio9292" onclick="GetSurveyFromRadio('optradio9292')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='effectiveDocument3' value="effectiveDocument3" name="optradio9292" onclick="GetSurveyFromRadio('optradio9292')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='effectiveDocument4' value="effectiveDocument4" name="optradio9292" onclick="GetSurveyFromRadio('optradio9292')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='effectiveDocument5' value="effectiveDocument5" name="optradio9292" onclick="GetSurveyFromRadio('optradio9292')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <label>Góp ý: (nếu có)</label>
+                        <input style="width:90%" name="differentDocument" maxlength="250" asp-for="DifferentDocument" />
+                    </td>
+                </tr>
+
+
+                @*Đánh giá thái độ, tinh thần phục vụ của cán bộ thư viện*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="4"><b>9.3</b></td>
+                    <td colspan="2"><b>Đánh giá thái độ, tinh thần phục vụ của cán bộ thư viện</b></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Hoạt động quản lý </label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='manageAttitude1' value="manageAttitude1" name="optradio93" onclick="GetSurveyFromRadio('optradio93')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='manageAttitude2' value="manageAttitude2" name="optradio93" onclick="GetSurveyFromRadio('optradio93')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='manageAttitude3' value="manageAttitude3" name="optradio93" onclick="GetSurveyFromRadio('optradio93')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='manageAttitude4' value="manageAttitude4" name="optradio93" onclick="GetSurveyFromRadio('optradio93')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='manageAttitude5' value="manageAttitude5" name="optradio93" onclick="GetSurveyFromRadio('optradio93')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tinh thần, thái độ phục vụ</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='serviceAttitude1' value="serviceAttitude1" name="optradio932" onclick="GetSurveyFromRadio('optradio932')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='serviceAttitude2' value="serviceAttitude2" name="optradio932" onclick="GetSurveyFromRadio('optradio932')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='serviceAttitude3' value="serviceAttitude3" name="optradio932" onclick="GetSurveyFromRadio('optradio932')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='serviceAttitude4' value="serviceAttitude4" name="optradio932" onclick="GetSurveyFromRadio('optradio932')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='serviceAttitude5' value="serviceAttitude5" name="optradio932" onclick="GetSurveyFromRadio('optradio932')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <label>Góp ý: (nếu có)</label>
+                        <input style="width:90%" name="differentAttitude" maxlength="250" asp-for="DifferentAttitude"/>
+                    </td>
+                </tr>
+
+                @*Theo Anh/Chị quy định, quy trình Mượn - Trả tài liệu, sách, báo, tạp chí,… ở Thư viện*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="4"><b>10</b></td>
+                    <td colspan="2"><b>Theo Anh/Chị quy định, quy trình Mượn - Trả tài liệu, sách, báo, tạp chí,… ở Thư viện</b></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Thông tin đầy đủ, thuận tiện</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='informationProcedure1' value="informationProcedure1" name="optradio10" onclick="GetSurveyFromRadio('optradio10')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='informationProcedure2' value="informationProcedure2" name="optradio10" onclick="GetSurveyFromRadio('optradio10')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='informationProcedure3' value="informationProcedure3" name="optradio10" onclick="GetSurveyFromRadio('optradio10')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='informationProcedure4' value="informationProcedure4" name="optradio10" onclick="GetSurveyFromRadio('optradio10')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='informationProcedure5' value="informationProcedure5" name="optradio10" onclick="GetSurveyFromRadio('optradio10')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Phù hợp với nhu cầu</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='properProcedure1' value="properProcedure1" name="optradio102" onclick="GetSurveyFromRadio('optradio102')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='properProcedure2' value="properProcedure2" name="optradio102" onclick="GetSurveyFromRadio('optradio102')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='properProcedure3' value="properProcedure3" name="optradio102" onclick="GetSurveyFromRadio('optradio102')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='properProcedure4' value="properProcedure4" name="optradio102" onclick="GetSurveyFromRadio('optradio102')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='properProcedure5' value="properProcedure5" name="optradio102" onclick="GetSurveyFromRadio('optradio102')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <label>Khác: </label>
+                        <input style="width:90%" name="differentProcedure" maxlength="250" asp-for="DifferentProcedure"/>
+                    </td>
+                </tr>
+
+                @*Đánh giá về Thư viện liên kết*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="4"><b>11</b></td>
+                    <td colspan="2"><b>Đánh giá về Thư viện liên kết</b></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Tốc độ tra cứu, truy cập</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='speedLink1' value="speedLink1" name="optradio11" onclick="GetSurveyFromRadio('optradio11')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='speedLink2' value="speedLink2" name="optradio11" onclick="GetSurveyFromRadio('optradio11')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='speedLink3' value="speedLink3" name="optradio11" onclick="GetSurveyFromRadio('optradio11')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='speedLink4' value="speedLink4" name="optradio11" onclick="GetSurveyFromRadio('optradio11')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='speedLink5' value="speedLink5" name="optradio11" onclick="GetSurveyFromRadio('optradio11')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>Hiệu quả sử dụng tài liệu</label>
+                    </td>
+                    <td>
+                        <fieldset>
+                            <label>1 <input type="radio" id='effectiveLink1' value="effectiveLink1" name="optradio112" onclick="GetSurveyFromRadio('optradio112')"></label>
+                            <label style="margin-left:10px">2 <input type="radio" id='effectiveLink2' value="effectiveLink2" name="optradio112" onclick="GetSurveyFromRadio('optradio112')"></label>
+                            <label style="margin-left:10px">3 <input type="radio" id='effectiveLink3' value="effectiveLink3" name="optradio112" onclick="GetSurveyFromRadio('optradio112')"></label>
+                            <label style="margin-left:10px">4 <input type="radio" id='effectiveLink4' value="effectiveLink4" name="optradio112" onclick="GetSurveyFromRadio('optradio112')"></label>
+                            <label style="margin-left:10px">5 <input type="radio" id='effectiveLink5' value="effectiveLink5" name="optradio112" onclick="GetSurveyFromRadio('optradio112')"></label>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <label>Khác: </label>
+                        <input style="width:90%" name="differentLink" maxlength="250" asp-for="DifferentLink"/>
+                    </td>
+                </tr>
+
+                @*Cảm nhận chung của Anh/Chị về Thư Viện?*@
+                <tr>
+                    <td style="vertical-align: middle;" align="center"><b>12</b></td>
+                    <td colspan="2"><b>Cảm nhận chung của Anh/Chị về Thư Viện?</b></td>
+                </tr>
+                @*Điều gì Anh/Chị hài lòng nhất về Thư viện? *@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="2"><b>12.1</b></td>
+                    <td colspan="2"><b>Điều gì Anh/Chị hài lòng nhất về Thư viện? </b></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea asp-for="YourSatisfied" maxlength="250" spellcheck="false">
+                         </textarea>
+                    </td>
+                </tr>
+
+                @*Điều gì Anh/Chị ít hài lòng nhất về Thư viện? *@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="2"><b>12.2</b></td>
+                    <td colspan="2"><b>Điều gì Anh/Chị ít hài lòng nhất về Thư viện?</b></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea asp-for="NotSatisfied" maxlength="250" spellcheck="false">
+                         </textarea>
+                    </td>
+                </tr>
+
+                @*Anh/Chị có góp ý , đề xuất gì để Thư viện bổ sung, cải tiến hoạt động tốt hơn trong thời gian tới ? *@
+                <tr>
+                    <td style="vertical-align: middle;" align="center" rowspan="2"><b>12.3</b></td>
+                    <td colspan="2"><b>Anh/Chị có góp ý, đề xuất gì để Thư viện bổ sung, cải tiến hoạt động tốt hơn trong thời gian tới?</b></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea asp-for="Feedback" maxlength="250" spellcheck="false">
+                         </textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="hidden" id="Come" name="Come" asp-for="Come">
+        <input type="hidden" id="useLib" name="useLib" asp-for="UseLib">
+        <input type="hidden" id="knowLib" name="knowLib" asp-for="KnowLib">
+        <input type="hidden" id="Purpose" name="Purpose" asp-for="Purpose">
+        <input type="hidden" id="Reason" name="Reason" asp-for="Reason">
+        <input type="hidden" id="TimeLibOpen" name="TimeLibOpen" asp-for="TimeLibOpen">
+        <input type="hidden" id="Search" name="Search" asp-for="Search">
+        <input type="hidden" id="InformationDatabase" name="InformationDatabase" asp-for="InformationDatabase">
+        <input type="hidden" id="SearchDatabase" name="SearchDatabase" asp-for="SearchDatabase">
+        <input type="hidden" id="informationCategory" name="informationCategory" asp-for="InformationCategory">
+        <input type="hidden" id="exactlyCategory" name="exactlyCategory" asp-for="ExactlyCategory">
+        <input type="hidden" id="informationWebsite" name="informationWebsite" asp-for="InformationWebsite">
+        <input type="hidden" id="exactlyWebsite" name="exactlyWebsite" asp-for="ExactlyWebsite">
+        <input type="hidden" id="searchWebsite" name="searchWebsite" asp-for="SearchWebsite">
+        <input type="hidden" id="ReadEffective" name="ReadEffective" asp-for="ReadEffective">
+        <input type="hidden" id="BorrowEffective" name="BorrowEffective" asp-for="BorrowEffective">
+        <input type="hidden" id="ReferEffective" name="ReferEffective" asp-for="ReferEffective">
+        <input type="hidden" id="InternetEffective" name="InternetEffective" asp-for="InternetEffective">
+        <input type="hidden" id="PhotoEffective" name="PhotoEffective" asp-for="PhotoEffective">
+        <input type="hidden" id="DifferentEffective" name="DifferentEffective" asp-for="DifferentEffective">
+        <input type="hidden" id="SpaceReview" name="SpaceReview" asp-for="SpaceReview">
+        <input type="hidden" id="SeatReview" name="SeatReview" asp-for="SeatReview">
+        <input type="hidden" id="RoomReview" name="RoomReview" asp-for="RoomReview">
+        <input type="hidden" id="DeviceReview" name="DeviceReview" asp-for="DeviceReview">
+        <input type="hidden" id="InternetReview" name="InternetReview" asp-for="InternetReview">
+        <input type="hidden" id="WifiReview" name="WifiReview" asp-for="WifiReview">
+        <input type="hidden" id="ShelfReview" name="ShelfReview" asp-for="ShelfReview">
+        <input type="hidden" id="AdditionReview" name="AdditionReview" asp-for="AdditionReview">
+        <input type="hidden" id="DocumentVN" name="DocumentVN" asp-for="DocumentVN">
+        <input type="hidden" id="DocumentEN" name="DocumentEN" asp-for="DocumentEN">
+        <input type="hidden" id="DocumentJP" name="DocumentJP" asp-for="DocumentJP">
+        <input type="hidden" id="DocumentCN" name="DocumentCN" asp-for="DocumentCN">
+        <input type="hidden" id="DocumentKP" name="DocumentKP" asp-for="DocumentKP">
+        <input type="hidden" id="DocumentDE" name="DocumentDE" asp-for="DocumentDE">
+        <input type="hidden" id="ProjectDocument" name="ProjectDocument" asp-for="ProjectDocument">
+        <input type="hidden" id="NewpaperDocument" name="NewpaperDocument" asp-for="NewpaperDocument">
+        <input type="hidden" id="EbookDocument" name="EbookDocument" asp-for="EbookDocument">
+        <input type="hidden" id="EbookDocument" name="EbookDocument" asp-for="EbookDocument">
+        <input type="hidden" id="UpdateDocument" name="UpdateDocument" asp-for="UpdateDocument">
+        <input type="hidden" id="EffectiveDocument" name="EffectiveDocument" asp-for="EffectiveDocument">
+        <input type="hidden" id="DifferentDocument" name="DifferentDocument" asp-for="DifferentDocument">
+        <input type="hidden" id="ManageAttitude" name="ManageAttitude" asp-for="ManageAttitude">
+        <input type="hidden" id="ServiceAttitude" name="ServiceAttitude" asp-for="ServiceAttitude">
+        <input type="hidden" id="DifferentAttitude" name="DifferentAttitude" asp-for="DifferentAttitude">
+        <input type="hidden" id="ProcessInformation" name="ProcessInformation" asp-for="ProcessInformation">
+        <input type="hidden" id="ProperProcedure" name="ProperProcedure" asp-for="ProperProcedure">
+        <input type="hidden" id="DifferentProcedure" name="DifferentProcedure" asp-for="DifferentProcedure">
+        <input type="hidden" id="SpeedLink" name="SpeedLink" asp-for="SpeedLink">
+        <input type="hidden" id="EffectiveLink" name="EffectiveLink" asp-for="EffectiveLink">
+        <input type="hidden" id="DifferentLink" name="DifferentLink" asp-for="DifferentLink">
+        
+        <p>Xin chân thành cảm ơn sự đóng góp ý kiến của các Anh/Chị</p>
+        <div class="container">
+            <div class="vertical-center" align="center">
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>
+        <script>
+            function disableTxt(id, txt, checked) {
+                var radios = document.getElementsByName(id);
+                for (var i = 0, length = radios.length; i < length; i++) {
+                    if (radios[i].checked) {
+                        document.getElementById(txt).disabled = false;
+                    }
+                    else {
+                        document.getElementById(txt).disabled = true;
+                    }
+                }
+                switch (id) {
+                    case 'optradio':
+                        {
+                            for (var i = 0; i < radios.length; i++) {
+                                if (!radios[checked].checked && radios[i].checked) {
+                                    var selector = 'label[for=' + radios[i].id + ']';
+                                    var label = document.querySelector(selector);
+                                    document.getElementById('Come').value = label.innerHTML;
+                                }
+                            }
+                        }
+                        break;
+                    case 'optradio3':
+                        {
+                            for (var i = 0; i < radios.length; i++) {
+                                if (!radios[checked].checked && radios[i].checked) {
+                                    var selector = 'label[for=' + radios[i].id + ']';
+                                    var label = document.querySelector(selector);
+                                    document.getElementById('knowLib').value = label.innerHTML;
+                                }
+                            }
+                        }
+                        break;
+
+                    case 'optradio4':
+                        {
+                            for (var i = 0; i < radios.length; i++) {
+                                if (!radios[checked].checked && radios[i].checked) {
+                                    var selector = 'label[for=' + radios[i].id + ']';
+                                    var label = document.querySelector(selector);
+                                    document.getElementById('Purpose').value = label.innerHTML;
+                                }
+                            }
+                        }
+                        break;
+
+                    case 'optradio5':
+                        {
+                            for (var i = 0; i < radios.length; i++) {
+                                if (!radios[checked].checked && radios[i].checked) {
+                                    var selector = 'label[for=' + radios[i].id + ']';
+                                    var label = document.querySelector(selector);
+                                    document.getElementById('Reason').value = label.innerHTML;
+                                }
+                            }
+                        }
+                        break;
+
+                    case 'optradio6':
+                        {
+                            for (var i = 0; i < radios.length; i++) {
+                                if (!radios[checked].checked && radios[i].checked) {
+                                    var selector = 'label[for=' + radios[i].id + ']';
+                                    var label = document.querySelector(selector);
+                                    document.getElementById('TimeLibOpen').value = label.innerHTML;
+                                }
+                            }
+                        }
+                        break;
+
+                    case 'optradio71':
+                        {
+                            for (var i = 0; i < radios.length; i++) {
+                                if (!radios[checked].checked && radios[i].checked) {
+                                    var selector = 'label[for=' + radios[i].id + ']';
+                                    var label = document.querySelector(selector);
+                                    document.getElementById('Search').value = label.innerHTML;
+                                }
+                            }
+                        }
+                        break;
+
+                }
+            }
+            function GetDataFromRadio(id) {
+                var radios = document.getElementsByName(id);
+                switch (id) {
+                    case 'optradio2':
+                        {
+                            for (var i = 0; i < radios.length; i++) {
+                                if (radios[i].checked) {
+                                    var selector = 'label[for=' + radios[i].id + ']';
+                                    var label = document.querySelector(selector);
+                                    document.getElementById('useLib').value = label.innerHTML;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            function GetDataFromInput(txtId) {
+                switch (txtId) {
+                    case 'timeComeTxt':
+                        document.getElementById('Come').value = document.getElementById(txtId).value;
+                        break;
+                    case 'knowLibTxt':
+                        document.getElementById('knowLib').value = document.getElementById(txtId).value;
+                        break;
+                    case 'PurposeTxt':
+                        document.getElementById('Purpose').value = document.getElementById(txtId).value;
+                        break;
+                    case 'ReasonTxt':
+                        document.getElementById('Reason').value = document.getElementById(txtId).value;
+                        break;
+                    case 'TimeLibOpenTxt':
+                        document.getElementById('TimeLibOpen').value = document.getElementById(txtId).value;
+                        break;
+                    case 'SearchTxt':
+                        document.getElementById('Search').value = document.getElementById(txtId).value;
+                        break;
+                }
+            }
+            function GetSurveyFromRadio(id) {
+                var radios = document.getElementsByName(id);
+                var count = 0;
+                for (var i = 0, length = radios.length; i < length; i++) {
+                    if (radios[i].checked) {
+                        count = i + 1;
+                    }
+                }
+                switch (id) {
+                    case 'optradio721':
+                        if (count != 0)
+                            document.getElementById('InformationDatabase').value = count.toString();
+                        break;
+                    case 'optradio7212':
+                        if (count != 0)
+                            document.getElementById('SearchDatabase').value = count.toString();
+                        break;
+                    case 'optradio722':
+                        if (count != 0)
+                            document.getElementById('informationCategory').value = count.toString();
+                        break;
+                    case 'optradio7222':
+                        if (count != 0)
+                            document.getElementById('exactlyCategory').value = count.toString();
+                        break;
+                    case 'optradio723':
+                        if (count != 0)
+                            document.getElementById('informationWebsite').value = count.toString();
+                        break;
+                    case 'optradio7232':
+                        if (count != 0)
+                            document.getElementById('exactlyWebsite').value = count.toString();
+                        break;
+                    case 'optradio7233':
+                        if (count != 0)
+                            document.getElementById('searchWebsite').value = count.toString();
+                        break;
+                    case 'optradio8':
+                        if (count != 0)
+                            document.getElementById('ReadEffective').value = count.toString();
+                        break;
+                    case 'optradio82':
+                        if (count != 0)
+                            document.getElementById('BorrowEffective').value = count.toString();
+                        break;
+                    case 'optradio83':
+                        if (count != 0)
+                            document.getElementById('ReferEffective').value = count.toString();
+                        break;
+                    case 'optradio84':
+                        if (count != 0)
+                            document.getElementById('InternetEffective').value = count.toString();
+                        break;
+                    case 'optradio85':
+                        if (count != 0)
+                            document.getElementById('PhotoEffective').value = count.toString();
+                        break;
+                    case 'optradio91':
+                        if (count != 0)
+                            document.getElementById('SpaceReview').value = count.toString();
+                        break;
+                    case 'optradio912':
+                        if (count != 0)
+                            document.getElementById('SeatReview').value = count.toString();
+                        break;
+                    case 'optradio913':
+                        if (count != 0)
+                            document.getElementById('RoomReview').value = count.toString();
+                        break;
+                    case 'optradio914':
+                        if (count != 0)
+                            document.getElementById('DeviceReview').value = count.toString();
+                        break;
+                    case 'optradio915':
+                        if (count != 0)
+                            document.getElementById('InternetReview').value = count.toString();
+                        break;
+                    case 'optradio916':
+                        if (count != 0)
+                            document.getElementById('WifiReview').value = count.toString();
+                        break;
+                    case 'optradio917':
+                        if (count != 0)
+                            document.getElementById('ShelfReview').value = count.toString();
+                        break;
+                    case 'optradio92':
+                        if (count != 0)
+                            document.getElementById('DocumentVN').value = count.toString();
+                        break;
+                    case 'optradio922':
+                        if (count != 0)
+                            document.getElementById('DocumentEN').value = count.toString();
+                        break;
+                    case 'optradio923':
+                        if (count != 0)
+                            document.getElementById('DocumentJP').value = count.toString();
+                        break;
+                    case 'optradio924':
+                        if (count != 0)
+                            document.getElementById('DocumentCN').value = count.toString();
+                        break;
+                    case 'optradio925':
+                        if (count != 0)
+                            document.getElementById('DocumentKP').value = count.toString();
+                        break;
+                    case 'optradio926':
+                        if (count != 0)
+                            document.getElementById('DocumentDE').value = count.toString();
+                        break;
+                    case 'optradio927':
+                        if (count != 0)
+                            document.getElementById('ProjectDocument').value = count.toString();
+                        break;
+                    case 'optradio928':
+                        if (count != 0)
+                            document.getElementById('NewpaperDocument').value = count.toString();
+                        break;
+                    case 'optradio929':
+                        if (count != 0)
+                            document.getElementById('EbookDocument').value = count.toString();
+                        break;
+                    case 'optradio9291':
+                        if (count != 0)
+                            document.getElementById('UpdateDocument').value = count.toString();
+                        break;
+                    case 'optradio9292':
+                        if (count != 0)
+                            document.getElementById('EffectiveDocument').value = count.toString();
+                        break;
+                    case 'optradio93':
+                        if (count != 0)
+                            document.getElementById('ManageAttitude').value = count.toString();
+                        break;
+                    case 'optradio932':
+                        if (count != 0)
+                            document.getElementById('ServiceAttitude').value = count.toString();
+                        break;
+                    case 'optradio10':
+                        if (count != 0)
+                            document.getElementById('ProcessInformation').value = count.toString();
+                        break;
+                    case 'optradio102':
+                        if (count != 0)
+                            document.getElementById('ProperProcedure').value = count.toString();
+                        break;
+                    case 'optradio11':
+                        if (count != 0)
+                            document.getElementById('SpeedLink').value = count.toString();
+                        break;
+                    case 'optradio112':
+                        if (count != 0)
+                            document.getElementById('EffectiveLink').value = count.toString();
+                        break;
+                }
+            }
+        </script>
+    </form>
+
+
+
+</body>
+</html>
